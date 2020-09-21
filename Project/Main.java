@@ -1,4 +1,4 @@
-package com.company.Project;
+package com.company;
 
 public class Main {
 
