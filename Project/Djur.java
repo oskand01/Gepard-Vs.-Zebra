@@ -4,17 +4,12 @@ public class Djur {
 
     private int x_pos;
     private int y_pos;
+    private int id;
     //private int speed;
     private boolean alive;
 
-    public Djur(){
 
-        x_pos = 10;
-        y_pos = 10;
-        //speed = 1;
-        alive =true;
-    }
-    public Djur(int speed){
+    public Djur(){
         this.x_pos = (int) (0 + Math.random() * 20);
         this.y_pos = (int) (0 + Math.random() * 60);
         //this.speed = speed;
