@@ -11,5 +11,5 @@ Alla geparder får id 1-10 (maxantalet just nu och går att ändra) och alla zeb
 
 Går tyvärr inte att skriva ut djuren på spelplanen i denna varianten än så länge i denna men borde gå att fixa. 
 
-OBS. Det är filerna som ligger utanför mappen project.
+OBS. Det är filerna som ligger utanför mappen project. Här är länken för att se koden i gitHub: https://github.com/oskand01/Gepard-Vs.-Zebra/commit/d56d875570da4d2f5540132d3fa61b1fafefcd5b
 
