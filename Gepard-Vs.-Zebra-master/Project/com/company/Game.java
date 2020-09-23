@@ -3,75 +3,83 @@ package com.company;
 import java.util.Scanner;
 
 public class Game {
-    private int counter; //Antal spelomgångar (Ex. för att se om geparder svälter ihjäl)??
+
     private Djur[] d = new Djur[50];
+    private int board[][] = new int[20][60];
     private boolean krock = false;
     private int animals;
-    private int board[][] = new int[20][60];
 
 
     public Game() {
-        newGame();
-
-    }
-
-    public void newGame() {
         System.out.println("Välkommen till den årliga Gepard vs. Zebra-tävlingen!");
         setAnimals(); //Antal djur från användare
-        printBoard();
-        //collition();
-
-    }
-
-    public void collition() {
-        while (krock == false) {
-            Zebra z = new Zebra(); //Bara så länge
-            Gepard g = new Gepard();
-            if (z.getX_pos() == g.getX_pos() && z.getY_pos() == g.getY_pos()) {
-                System.out.printf("KROCK!%n(x: %d y: %d%n%nEfter %d gånger!%n%n%n)", z.getX_pos(), z.getY_pos(), counter);
-                this.krock = true;
-
-            } else {
-                System.out.println("Zebra: " + z.getX_pos() + " " + z.getY_pos());
-                System.out.println("Gepard: " + g.getX_pos() + " " + g.getY_pos());
-
-            }
-            this.counter++;
-
-        }
-
-
+        printSpelplan();
+        printDjur();
     }
 
     public void setAnimals() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Hur många geparder ska jaga zebrorna?");
-        // try catch här
-        this.animals = scan.nextInt();
-    }
-
-
-
-public void printBoard() {
-    String s = " ";
-    String b = "*";
-
-    for (int x = 0; x < board.length; x++) {
-        for (int y = 0; y < 60; y++) {
-            if (x == 0 || x == 19 || y == 0 || y == 59) {
-                System.out.print(b);
-            }
-            else if (board[x][y] == 0) {
-                System.out.print(s);
-            } else {
-                System.out.print(board[x][y]);
-
+        do {
+        System.out.println("Hur många geparder ska jaga zebrorna? Ange mellan 1-10");
+            animals = scan.nextInt();
+        } while (animals <= 0 || animals > 10);
+        for (int i = 0; i < animals; i++) {
+            Gepard gepard = new Gepard();
+            setSpelPlan(gepard.getX(), gepard.getY());
+            for (int j = 0; j < d.length; j++) {
+                if(d[j] == null){
+                    d[j] = gepard;
+                    j = d.length;
+                }
             }
         }
-
-        System.out.println();
+        for (int i = 0; i < animals*2; i++) {
+            Zebra zebra = new Zebra();
+            for (int j = 0; j < d.length; j++) {
+                if(d[j] == null){
+                    d[j] = zebra;
+                    j = d.length;
+                }
+            }
+        }
     }
 
-}
+    public void printDjur(){
+        for (int i = 0; i < d.length; i++) {
+            if(d[i] == null){
+                i = d.length;
+            }else System.out.println(d[i]);
+        }
+    }
 
-}
+
+    public void setSpelPlan(int x, int y) {
+        board[x][y] = 1;
+    }
+
+    public void printSpelplan() {
+        String s = " ";
+        String b = "*";
+        String g = "G";
+
+        for (int x = 0; x < board.length; x++) {
+            for (int y = 0; y < 60; y++) {
+                if (x == 0 || x == 19 || y == 0 || y == 59) {
+                    System.out.print(b);
+                } else if (board[x][y] == 0) {
+                    System.out.print(s);
+                } else{
+                    System.out.print(board[x][y]);
+                }
+
+                }
+            }
+
+            System.out.println();
+        }
+
+    }
+
+
+
+

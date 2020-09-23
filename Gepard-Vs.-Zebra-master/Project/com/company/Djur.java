@@ -4,43 +4,30 @@ public class Djur {
 
     private int x_pos;
     private int y_pos;
+    private int id;
     //private int speed;
     private boolean alive;
 
-    public Djur() {
 
-        x_pos = 10;
-        y_pos = 10;
-        //speed = 1;
-        alive = true;
-    }
-
-    public Djur(int speed) {
+    public Djur(){
         this.x_pos = (int) (0 + Math.random() * 20);
         this.y_pos = (int) (0 + Math.random() * 60);
+        this.id = (int) (0 + Math.random() * 10);
         //this.speed = speed;
         alive = true;
     }
 
-    public int getX_pos() {
+    public int getX() {
         return x_pos;
     }
 
-    public void setX_pos(int x_pos) {
-        this.x_pos = x_pos;
-    }
-
-    public int getY_pos() {
+    public int getY() {
         return y_pos;
-    }
-
-    public void setY_pos(int y_pos) {
-        this.y_pos = y_pos;
     }
 
     @Override
     public String toString() {
-        return "x_pos=" + x_pos +
+        return "id= "+ id + " x_pos=" + x_pos +
                 ", y_pos=" + y_pos +
                 //", speed=" + speed +
                 ", alive=" + alive;
