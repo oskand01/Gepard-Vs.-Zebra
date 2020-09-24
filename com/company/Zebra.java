@@ -7,6 +7,7 @@ public class Zebra extends Djur {
     public Zebra(){
         scared = false;
         setSpeed(2);
+        setDirectionRandom(directionRandom);
     }
 
     public void createZebras() {
