@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public abstract class Djur implements Interface {
     Random random = new Random(); // instansierar ett nytt objekt random
-    enum Direction{up, down, left, right, upLeft, downLeft, upRight, downRight}
+    enum Direction{up, down, left, right}
     //initierar en enumtyp för de olika riktningarna som djuren ska kunna röra sig i
     Direction directionRandom;
     //deklarerar directionRandom av enumtypen Direction, ska nedan används för att slumpa fram en label/riktning för djuret
@@ -51,8 +51,8 @@ public abstract class Djur implements Interface {
         return pos;
     }
 
-    public void setPos(Point pos) {
-        this.pos = pos;
+    public void setPos(int x, int y) {
+        this.pos = new Point(getX(), getY());
     }
 
     public int getId() {
@@ -97,31 +97,23 @@ public abstract class Djur implements Interface {
 
         switch (directionRandom) {
             case up:
-
+                this.y = getY()-getSpeed();
+                setPos(x, y);
                 break;
             case down:
-
+                this.y = getY()+getSpeed();
+                setPos(x, y);
                 break;
 
             case left:
-
+                this.x = getX()+getSpeed();
+                setPos(x, y);
                 break;
             case right:
-
+                this.x = getX()-getSpeed();
+                setPos(x, y);
                 break;
-            case upLeft:
-
-                break;
-            case downLeft:
-
-                break;
-            case upRight:
-
-                break;
-            case downRight:
-
-                break;
-
+           
             default:
         }
 
