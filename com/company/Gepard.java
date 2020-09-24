@@ -7,6 +7,7 @@ public class Gepard extends Djur {
     public Gepard() {
         setSpeed(1); //Bara tillfälliga värden
         hungry = true;
+        setDirectionRandom(directionRandom);
 
     }
 
