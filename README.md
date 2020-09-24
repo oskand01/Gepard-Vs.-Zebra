@@ -10,4 +10,4 @@ Arrayen som sparar djuren ligger i interface så att alla klasser har tillgång 
 
 Går tyvärr inte att skriva ut djuren på spelplanen i denna varianten än så länge i denna men borde gå att fixa.
 
-OBS! Det är den som heter com/company
+OBS! Det är den som heter com/company och krånglar nog när man försöker öppna i intellij. Om man refactor till en mapp som heter com.company funkar den.
