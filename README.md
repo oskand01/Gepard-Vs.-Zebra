@@ -9,3 +9,5 @@ Alla geparder får id 1-10 (maxantalet just nu och går att ändra) och alla zeb
 Arrayen som sparar djuren ligger i interface så att alla klasser har tillgång till den, men funderar på om det kanske borde vara var sin array för geparder och zebror?
 
 Går tyvärr inte att skriva ut djuren på spelplanen i denna varianten än så länge i denna men borde gå att fixa.
+
+OBS! Det är den som heter com.company
