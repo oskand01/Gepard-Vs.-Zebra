@@ -12,8 +12,6 @@ public class SpelPlan implements Interface {
     private int x;
     private int y;
     private Point point; //Här är också en point
-    private Gepard gepard = new Gepard(); //Aggregat
-    private Zebra zebra = new Zebra(); //Aggreagat
 
 
     public SpelPlan() {
@@ -48,6 +46,12 @@ public class SpelPlan implements Interface {
         this.point = pos;
     }
 
+    
+    /*
+    Denna metoden ska bytas ut
+    Filar på ett mer effektivt sätt att visa djur,
+    som inte kräver id
+    */
     public void printSpelplan() {
         String s = "  ";
         String b = "_ ";
