@@ -25,6 +25,11 @@ behöver bara skapas när vi ber dom
         zebra.createZebras();
         spelPlan.printSpelplan();
         gepard.printDjur(); //Skriver ut listan med alla djur
+        /*
+        borde anropa en metod här 
+        som fortsätter köra igenom programmet 
+        tills vi möter ett mål
+        */
     }
 
     public void menu() { //Hette tidigare setAnimals
