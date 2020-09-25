@@ -11,6 +11,12 @@ Då är det bättre att vi hanterar x och y i game
 */
 
 public class SpelPlan implements Interface {
+    
+    /*
+    Här kanske vi borde hantera spelplanen[][] (vart tog den vägen förresten? :D)
+    Eli's awesome Random random ny random 
+    och antalet djur som är på spelplanen 
+    */
     private int x;
     private int y;
     private Point point; //Här är också en point
