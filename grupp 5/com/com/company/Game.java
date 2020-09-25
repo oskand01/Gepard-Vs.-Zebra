@@ -3,10 +3,16 @@ package com.company;
 import java.awt.*;
 import java.util.Scanner;
 
+/*
+Lägg all logik här
+som flyttar eller skapar objekt
+*/
+
 public class Game implements Interface {
-    private Zebra zebra = new Zebra(); // Aggregat
-    private Gepard gepard = new Gepard(); // Aggregat
-    private SpelPlan spelPlan = new SpelPlan(); //Aggregat och SpelPlan tillbaka som egen klass, bra för att kunna använda metoder på objektet tänkte jag
+/*
+Tog bort objekten som skapades här
+behöver bara skapas när vi ber dom
+*/
 
 
     public Game() {
