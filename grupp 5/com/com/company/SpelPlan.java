@@ -2,6 +2,12 @@ package com.company;
 
 import java.awt.*;
 
+/*
+Tänker om vi har som tumregel
+att spelplan visar alla förändringar, 
+men alla flytt sker i game? 
+*/
+
 public class SpelPlan implements Interface {
     private int x;
     private int y;
