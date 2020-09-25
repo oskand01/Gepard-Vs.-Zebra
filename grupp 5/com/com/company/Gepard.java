@@ -7,14 +7,21 @@ public class Gepard extends Djur {
     public Gepard() {
         setSpeed(1); //Bara tillfälliga värden
         hungry = true;
-        setDirectionRandom(directionRandom);
+        setDirectionRandom(directionRandom);  //Borde hanteras i Game
 
     }
 
+    /*
+    Ska vi kommentera ut detta 
+    tills vi får movement att fungera? 
+    */
     public void hunt() {
         setSpeed(3); //Går lätt att ändra med setSpeed
     }
-
+    
+    /*
+    Borde också ligga i Game, se Zebra 
+    */
     public void createGepards() {
         for (int i = 0; i < getAnimals(); i++) { //animals = användarens val av antal geparder
             Gepard gepard = new Gepard();
