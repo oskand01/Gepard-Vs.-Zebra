@@ -15,7 +15,12 @@ public class SpelPlan implements Interface {
     /*
     Här kanske vi borde hantera spelplanen[][] (vart tog den vägen förresten? :D)
     Eli's awesome Random random ny random 
-    och antalet djur som är på spelplanen 
+    och antalet djur som är på spelplanen
+    
+    
+    Om någon kommer på en bra metod 
+    för att se om coordinaterna på spelplanen är upptagna
+    vore det super!
     */
     private int x;
     private int y;
