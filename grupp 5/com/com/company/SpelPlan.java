@@ -6,6 +6,8 @@ import java.awt.*;
 Tänker om vi har som tumregel
 att spelplan visar alla förändringar, 
 men alla flytt sker i game? 
+
+Då är det bättre att vi hanterar x och y i game
 */
 
 public class SpelPlan implements Interface {
