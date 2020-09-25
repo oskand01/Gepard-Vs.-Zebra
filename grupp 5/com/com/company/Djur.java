@@ -6,11 +6,15 @@ import java.util.Random;
 import java.util.Scanner;
 
 public abstract class Djur implements Interface {
-    Random random = new Random(); // instansierar ett nytt objekt random
-    enum Direction{up, down, left, right}
-    //initierar en enumtyp för de olika riktningarna som djuren ska kunna röra sig i
+    /*
+    Detta borde flyttas till Game
+    Random random = new Random(); 
+    
+    enum Direction{up, down, left, right}   //initierar en enumtyp för de olika riktningarna som djuren ska kunna röra sig i
+    
     Direction directionRandom;
     //deklarerar directionRandom av enumtypen Direction, ska nedan används för att slumpa fram en label/riktning för djuret
+    */
 
 
     private int x;
@@ -18,18 +22,29 @@ public abstract class Djur implements Interface {
     private Point pos; //Nytt! Point anger en position och innehåller ett X-värde och ett Y-värde: Point(int x, int y)
     //Skitbra för att ta reda på och jämföra positioner
 
-    private int id; //Geparder får id 1-10, zebror får id 11 och uppåt
-    private int speed;
+    private int id; //Tänkte byta ut detta emot char tag; istället, om nin skriver nya metoder, då slipper vi loopa massa vektorer
+    // private int speed;   kommenterar ut detta tills vi får basen att funka
     private boolean alive;
     private int animals;
 
+    
+    /*
+    Tilldelar en random position till djuret
+    Behöver en metod för att se om cellen är upptagen
+    */
     public Djur(){
         this.x = (int) (1 + Math.random() * 19);
         this.y = (int) (1 + Math.random() * 29);
-        this.pos = new Point(getX(), getY()); //Här får "Point pos" sitt värde
+        this.pos = new Point(getX(), getY());
         alive = true;
-        speed = 1; //Sätter en grundspeed för alla djur som sen ändras i gepard- och zebra-klasserna
+        //speed = 1; //Sätter en grundspeed för alla djur som sen ändras i gepard- och zebra-klasserna, utkommenterad tills vidare
     }
+    /*
+    Metod till senare, kan anropas genom att ge parametern Gepard eller Zebra specifikt när dom ska flyttas
+    public Djur(Djur d){
+    this.setPos(a.getPos()
+    }
+    */
 
     public int getX() {
         return x;
@@ -56,6 +71,10 @@ public abstract class Djur implements Interface {
         this.pos = new Point(getX(), getY());
     }
 
+    
+    /*
+    set getID bytas antagligen ut till char tag
+    */
     public int getId() {
         return id;
     }
@@ -92,6 +111,9 @@ public abstract class Djur implements Interface {
         return djur;
     }
 
+    /*
+    Skitbra, men borde nog ligga i game :)
+    */
     public void setDirectionRandom(Direction directionRandom) {
 
         directionRandom = Direction.values()[random.nextInt(Direction.values().length)];
@@ -133,13 +155,16 @@ public abstract class Djur implements Interface {
 
 
 
-    public void printDjur() {
+  /*  
+  kommenterar ut denna sålänge, kan vara överflödig längre fram, men osäker
+  public void printDjur() {
         for (int i = 0; i < djur.length; i++) {
             if (djur[i] == null) {
                 i = djur.length;
             } else System.out.println(djur[i]);
         }
     }
+    */
 
     @Override
     public String toString() {
