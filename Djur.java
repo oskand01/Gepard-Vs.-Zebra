@@ -5,11 +5,13 @@ public class Djur {
     private char tag;
     private int xPos;
     private int yPos;
+    private int speed;
 
     public Djur(){
         tag = '0';
         xPos = -1;
         yPos = -1;
+        speed = 1;
     }
 
     public Djur(int x, int y){
@@ -41,4 +43,18 @@ public class Djur {
     public void setyPos(int yPos) {
         this.yPos = yPos;
     }
+
+    public void setSpeed(int speed){
+        this.speed = speed;
+
+    }
+
+    public int getSpeed(){
+        return speed;
+
+    }
+
+
+
+
 }

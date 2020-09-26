@@ -1,6 +1,4 @@
 package com.company;
-
-
 import java.util.Random;
 import java.util.Scanner;
 
@@ -11,12 +9,16 @@ public class Game {
      * En salig blandning av svenska och engelska
      * försökt städa lite
      */
+    private int x;
+    private int y;
     static Djur[][] spelplan = new Djur[20][60];
     Random random = new Random();
     private static int antalGeparder;
     private static int antalZebror;
-
     private enum Flytta {up, down, left, right}
+
+
+
 
     /**
      * Konstruktorn för game agerar som själva menyn för "spelet"
@@ -43,6 +45,9 @@ public class Game {
 
         valAntalDjur(gepard, zebra);
         runGame();
+        flyttaDjur(new Gepard(), Flytta.values()[random.nextInt(Flytta.values().length)]);
+        //kallar på flyttaDjur, placerar den här tillfälligt pga osäker
+
     }
 
     /**
@@ -55,6 +60,9 @@ public class Game {
         antalGeparder = geparder;
         antalZebror = zebror;
         valAntalDjur(antalGeparder, antalZebror);
+        
+
+
     }
 
 
@@ -72,12 +80,13 @@ public class Game {
     public void runGame() {
         while (antalZebror != 0 && antalGeparder != 0) {
             new Spelplan();
-            //move();
+
             try {
                 Thread.sleep(3000);
             } catch (Exception e) {
                 System.out.println("mög");
             }
+
         }
     }
 
@@ -93,10 +102,12 @@ public class Game {
     public void valAntalDjur(int gepard, int zebra) {
         for (int i = 0; i < gepard; i++) {
             placeraDjur(new Gepard());
+
             antalGeparder++;
         }
         for (int i = 0; i < zebra; i++) {
             placeraDjur(new Zebra());
+
             antalZebror++;
         }
     }
@@ -124,12 +135,18 @@ public class Game {
 
         if (djur instanceof Gepard) {
             spelplan[x][y] = new Gepard(x, y);
+
         } else if (djur instanceof Zebra) {
             spelplan[x][y] = new Zebra(x, y);
+
         } else {
             System.out.println("Kunde inte placera fler djur");
         }
+
+
     }
+
+
 
     /**
      * Testar spelplanens x och y
@@ -151,32 +168,64 @@ public class Game {
      * @param djur bestämmer vilket djur som ska röra sig
      * @param dir  använder vi för att bestämma vilket håll
      */
-    public static void flyttaDjur(Djur djur, Flytta dir) {
+    public void flyttaDjur(Djur djur, Flytta dir) {
         int x = djur.getxPos();
         int y = djur.getyPos();
+
 
         if (djur.getTag() == 'G') {
             switch (dir) {
                 case up:
+                    y -= djur.getSpeed(); //hämtar djurets hastighet i Objekt djur
+                    djur.setyPos(y); // bestämmer det nya y-värdet för djurets position
+
                     break;
                 case down:
+                    y += djur.getSpeed();
+                    djur.setyPos(y);
+
                     break;
                 case left:
+                    x += djur.getSpeed();
+                    djur.setxPos(x);
+
                     break;
                 case right:
+                    x -= djur.getSpeed();
+                    djur.setxPos(x);
+
                     break;
+
+
             }
+            spelplan[x][y] = new Gepard(x, y);
+
         } else if (djur.getTag() == 'Z') {
             switch (dir) {
                 case up:
+                    y -= djur.getSpeed();
+                    this.y = y;
+
                     break;
                 case down:
+                    y += djur.getSpeed();
+                    this.y = y;
+
                     break;
                 case left:
+                    x += djur.getSpeed();
+                    this.x = x;
+
                     break;
                 case right:
+                    x -= djur.getSpeed();
+                    this.x = x;
+
                     break;
+
             }
+            spelplan[x][y] = new Gepard(x, y);
+
         }
     }
 
