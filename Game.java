@@ -11,50 +11,50 @@ public class Game {
      * En salig blandning av svenska och engelska
      * försökt städa lite
      */
-    static Djur[][] spelplan = new Djur[20][60];
+    protected static Djur[][] spelplan = new Djur[20][60];
     Random random = new Random();
     private static int antalGeparder;
     private static int antalZebror;
 
-    private enum Flytta {up, down, left, right}
+    protected enum Flytta {up, down, left, right}
 
     /**
-     * Konstruktorn för game agerar som själva menyn för "spelet"
+     * Agerar default
+     */
+    public Game(int geparder, int zebror) {
+        antalGeparder = geparder;
+        antalZebror = zebror;
+        skapaAntalDjur(antalGeparder, antalZebror);
+    }
+
+    /**
+     * Konstruktorn agerar som själva menyn för "spelet"
      * <p>
-     * Ber om antalet djur,
-     * ser till att antalet Zebror inte är färre än Geparder
-     * <p>
+     * Skickar vidare till metoder som:
+     * Tar emot inmatning av antal djur, som skickar vidare och
      * Placerar djuren på spelplanen
-     * Startar runGame, som tar hand om game-loopen
+     * Tar hand om game-loopen
      */
     public Game() {
+        System.out.println("Välkommen till den årliga Gepard vs. Zebra-tävlingen!");
+
+        System.out.println("Hur många geparder ska jaga hur många zebror?");
+        mataInDjur();
+        runGame();
+    }
+
+    public void mataInDjur() {
         Scanner scan = new Scanner(System.in);
         int gepard;
         int zebra;
 
-        System.out.println("Välkommen till den årliga Gepard vs. Zebra-tävlingen!");
-        System.out.println("Hur många geparder ska jaga hur många zebror?");
         gepard = scan.nextInt();
-
         do {
             zebra = scan.nextInt();
             System.out.println("Antalet Zebror måste vara minst lika många som Geparder");
         } while (gepard > zebra);
 
-        valAntalDjur(gepard, zebra);
-        runGame();
-    }
-
-    /**
-     * Helt meningslös för tillfället
-     * tänkte att vi kanske behöver uppdatera
-     * antalet zebror och geparder
-     * efter eventuell "död" på spelplanen
-     */
-    public Game(int geparder, int zebror) {
-        antalGeparder = geparder;
-        antalZebror = zebror;
-        valAntalDjur(antalGeparder, antalZebror);
+        skapaAntalDjur(gepard, zebra);
     }
 
 
@@ -71,8 +71,11 @@ public class Game {
      */
     public void runGame() {
         while (antalZebror != 0 && antalGeparder != 0) {
+            clearScreen();
             new Spelplan();
-            //move();
+            kontroll();
+            resetFlytt();
+
             try {
                 Thread.sleep(3000);
             } catch (Exception e) {
@@ -82,15 +85,12 @@ public class Game {
     }
 
     /**
-     * Skickar hit antalet djur som användaren angett i Game-konstruktorn
-     * loopar igenom respektive antal
-     * <p>
-     * Skapar nya Geparder och Zebror
-     * och kallar på placeraDjur()
-     * <p>
-     * ändrar våra antalGeparder/antalZebror
+     * Skapar antalet djur och skickar vidare dom till placera-metoden
+     *
+     * @param gepard antalet geparder som skapas
+     * @param zebra  antalet zebror som skapas
      */
-    public void valAntalDjur(int gepard, int zebra) {
+    public void skapaAntalDjur(int gepard, int zebra) {
         for (int i = 0; i < gepard; i++) {
             placeraDjur(new Gepard());
             antalGeparder++;
@@ -137,7 +137,7 @@ public class Game {
      * om de inte används returnerar den false
      */
 
-    public boolean upptagen(int x, int y) {
+    public static boolean upptagen(int x, int y) {
         if (Game.spelplan[x][y] != null) {
             return true;
         } else {
@@ -145,42 +145,8 @@ public class Game {
         }
     }
 
-    /**
-     * La in Eli's enum och switch igen
-     *
-     * @param djur bestämmer vilket djur som ska röra sig
-     * @param dir  använder vi för att bestämma vilket håll
-     */
-    public static void flyttaDjur(Djur djur, Flytta dir) {
-        int x = djur.getxPos();
-        int y = djur.getyPos();
 
-        if (djur.getTag() == 'G') {
-            switch (dir) {
-                case up:
-                    break;
-                case down:
-                    break;
-                case left:
-                    break;
-                case right:
-                    break;
-            }
-        } else if (djur.getTag() == 'Z') {
-            switch (dir) {
-                case up:
-                    break;
-                case down:
-                    break;
-                case left:
-                    break;
-                case right:
-                    break;
-            }
-        }
-    }
-
-    public static Flytta generateRandomFlytt() {
+    public static Flytta randomFlytt() {
         Flytta[] values = Flytta.values();
         int length = values.length;
         int randIndex = new Random().nextInt(length);
@@ -194,4 +160,99 @@ public class Game {
     public static int getAntalZebror() {
         return antalZebror;
     }
+
+    public static void kontroll() {
+        for (int i = 0; i < spelplan.length - 1; i++) {
+            for (int j = 0; j < Game.spelplan[i].length; j++) {
+                if (spelplan[i][j] != null) {
+                    kontrollDjur(i, j);
+                }
+            }
+        }
+    }
+
+    public static void kontrollDjur(int i, int j) {
+        if (spelplan[i][j].harFlyttat() == false) {
+            flytta(i, j, randomFlytt());
+        }
+    }
+
+    public static void resetFlytt() {
+        for (int i = 0; i < spelplan.length - 1; i++) {
+            for (int j = 0; j < Game.spelplan[i].length; j++) {
+                if (spelplan[i][j] != null) {
+                    spelplan[i][j].setFlytt(false);
+                }
+            }
+        }
+    }
+
+    /**
+     * La in Eli's enum och switch igen
+     * <p>
+     * måste kolla om rutan är upptagen.....
+     *
+     * @param dir använder vi för att bestämma vilket håll
+     */
+    public static void flytta(int x, int y, Game.Flytta dir) {
+
+        switch (dir) {
+            case up:
+                if (spelplan[x][y].getxPos() == 0) {
+                    break;
+                }
+                if (spelplan[x][y].getTag() == 'G') {
+                    spelplan[x - 1][y] = new Gepard(x - 1, y);
+                } else if (spelplan[x][y].getTag() == 'Z') {
+                    spelplan[x - 1][y] = new Zebra(x - 1, y, true);
+                }
+                spelplan[x][y] = null;
+                break;
+
+            case down:
+                if (spelplan[x][y].getxPos() == 20) {
+                    break;
+                }
+                if (spelplan[x][y].getTag() == 'G') {
+                    spelplan[x + 1][y] = new Gepard(x + 1, y);
+                } else if (spelplan[x][y].getTag() == 'Z') {
+                    spelplan[x + 1][y] = new Zebra(x + 1, y, true);
+                }
+                spelplan[x][y] = null;
+
+                break;
+            case left:
+                if (spelplan[x][y].getyPos() == 1) {
+                    break;
+                }
+                if (spelplan[x][y].getTag() == 'G') {
+                    spelplan[x][y - 1] = new Gepard(x, y - 1, true);
+                } else if (spelplan[x][y].getTag() == 'Z') {
+                    spelplan[x][y - 1] = new Zebra(x, y - 1, true);
+                }
+                spelplan[x][y] = null;
+
+                break;
+            case right:
+                if (spelplan[x][y].getyPos() == 59) {
+                    break;
+                }
+
+                if (spelplan[x][y].getTag() == 'G') {
+                    spelplan[x][y + 1] = new Gepard(x, y + 1, true);
+                } else if (spelplan[x][y].getTag() == 'Z') {
+                    spelplan[x][y + 1] = new Zebra(x, y + 1, true);
+                }
+                spelplan[x][y] = null;
+
+                break;
+        }
+    }
+
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+
 }

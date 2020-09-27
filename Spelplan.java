@@ -6,6 +6,7 @@ public class Spelplan {
 
     public Spelplan(){
         printSpelplan();
+
     }
 
 
@@ -17,7 +18,7 @@ public class Spelplan {
      *
      */
     public void printSpelplan(){
-        System.out.println("************************************************************"); //toppens gräns
+        System.out.println("**************************************************************"); //toppens gräns
 
         for (int i = 0; i < Game.spelplan.length; i++) {
             System.out.print("*");  //vänster gräns

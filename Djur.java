@@ -6,6 +6,9 @@ public class Djur {
     private int xPos;
     private int yPos;
 
+    private boolean flytt;
+
+
     public Djur(){
         tag = '0';
         xPos = -1;
@@ -17,6 +20,7 @@ public class Djur {
         this.yPos = y;
         this.tag = tag;
     }
+
 
     public void setTag(char tag) {
         this.tag = tag;
@@ -41,4 +45,13 @@ public class Djur {
     public void setyPos(int yPos) {
         this.yPos = yPos;
     }
+
+    public void setFlytt(boolean flytt) {
+        this.flytt = flytt;
+    }
+    public boolean harFlyttat(){
+        return this.flytt;
+    }
+
+
 }
