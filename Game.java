@@ -207,18 +207,29 @@ public class Game {
      */
     public static void getDistance(Djur[] djurPos) {
         antalHits = 0; //OBS! Tillfällig för att se om den funkar
-
+        int avstånd;
         for (int i = 0; i < djurPos.length; i++) {
             for (int j = i + 1; j < djurPos.length; j++) {
-                if (djurPos[i].getPosition().distance(djurPos[j].getPosition()) == 1 && djurPos[i].getTag() != djurPos[j].getTag()) {
-                    antalHits++;
-                    if (djurPos[i].getTag() == 'Z') {
-                    } else if (djurPos[i].getTag() == 'G') {
+                if (djurPos[i] != null && djurPos[j] != null) {
+                    avstånd = (int) djurPos[i].getPosition().distance(djurPos[j].getPosition());
+                    if (avstånd < 2 && djurPos[i].getTag() != djurPos[j].getTag()) {
+                        antalHits++; //Tillfällig
+                    } else if (avstånd < 2 && djurPos[i].getTag() == djurPos[j].getTag()) {
 
                     }
                 }
+
             }
         }
+
+    }
+    
+    public static void setAntalGeparder(int antalGeparder) {
+        Game.antalGeparder = antalGeparder;
+    }
+
+    public static void setAntalZebror(int antalZebror) {
+        Game.antalZebror = antalZebror;
     }
 
     public static int getAntalGeparder() {
