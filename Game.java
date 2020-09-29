@@ -1,5 +1,7 @@
-package com.company;
+package company;
 
+
+import org.w3c.dom.ls.LSOutput;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -11,50 +13,53 @@ public class Game {
      * En salig blandning av svenska och engelska
      * försökt städa lite
      */
-    static Djur[][] spelplan = new Djur[20][60];
+    protected static Djur[][] spelplan = new Djur[20][60];
     Random random = new Random();
     private static int antalGeparder;
     private static int antalZebror;
 
-    private enum Flytta {up, down, left, right}
+    private static int antalHits; //OBS! Tillfällig för att se om metoden getDistance() fungerar
+
+    protected enum Flytta {up, down, left, right}
+    private static boolean dennaFlyttKlar = false;
 
     /**
-     * Konstruktorn för game agerar som själva menyn för "spelet"
-     * <p>
-     * Ber om antalet djur,
-     * ser till att antalet Zebror inte är färre än Geparder
-     * <p>
-     * Placerar djuren på spelplanen
-     * Startar runGame, som tar hand om game-loopen
-     */
-    public Game() {
-        Scanner scan = new Scanner(System.in);
-        int gepard;
-        int zebra;
-
-        System.out.println("Välkommen till den årliga Gepard vs. Zebra-tävlingen!");
-        System.out.println("Hur många geparder ska jaga hur många zebror?");
-        gepard = scan.nextInt();
-
-        do {
-            zebra = scan.nextInt();
-            System.out.println("Antalet Zebror måste vara minst lika många som Geparder");
-        } while (gepard > zebra);
-
-        valAntalDjur(gepard, zebra);
-        runGame();
-    }
-
-    /**
-     * Helt meningslös för tillfället
-     * tänkte att vi kanske behöver uppdatera
-     * antalet zebror och geparder
-     * efter eventuell "död" på spelplanen
+     * Agerar default
      */
     public Game(int geparder, int zebror) {
         antalGeparder = geparder;
         antalZebror = zebror;
-        valAntalDjur(antalGeparder, antalZebror);
+        skapaAntalDjur(antalGeparder, antalZebror);
+    }
+
+    /**
+     * Konstruktorn agerar som själva menyn för "spelet"
+     * <p>
+     * Skickar vidare till metoder som:
+     * Tar emot inmatning av antal djur, som skickar vidare och
+     * Placerar djuren på spelplanen
+     * Tar hand om game-loopen
+     */
+    public Game() {
+        System.out.println("Välkommen till den årliga Gepard vs. Zebra-tävlingen!");
+
+        System.out.println("Hur många geparder ska jaga hur många zebror?");
+        mataInDjur();
+        runGame();
+    }
+
+    public void mataInDjur() {
+        Scanner scan = new Scanner(System.in);
+        int gepard;
+        int zebra;
+
+        gepard = scan.nextInt();
+        do {
+            System.out.println("Antalet Zebror måste vara minst lika många som Geparder");
+            zebra = scan.nextInt();
+        } while (gepard > zebra);
+
+        skapaAntalDjur(gepard, zebra);
     }
 
 
@@ -70,11 +75,15 @@ public class Game {
      * endast för redovisningens skull
      */
     public void runGame() {
-        while (antalZebror != 0 && antalGeparder != 0) {
-            new Spelplan();
-            //move();
+        while (antalZebror > 0 && antalGeparder != 0) {
+            clearScreen();
+            Spelplan.printSpelplan();
+            kontroll();
+            resetFlytt();
+            //debug();
+
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (Exception e) {
                 System.out.println("mög");
             }
@@ -82,15 +91,12 @@ public class Game {
     }
 
     /**
-     * Skickar hit antalet djur som användaren angett i Game-konstruktorn
-     * loopar igenom respektive antal
-     * <p>
-     * Skapar nya Geparder och Zebror
-     * och kallar på placeraDjur()
-     * <p>
-     * ändrar våra antalGeparder/antalZebror
+     * Skapar antalet djur och skickar vidare dom till placera-metoden
+     *
+     * @param gepard antalet geparder som skapas
+     * @param zebra  antalet zebror som skapas
      */
-    public void valAntalDjur(int gepard, int zebra) {
+    public void skapaAntalDjur(int gepard, int zebra) {
         for (int i = 0; i < gepard; i++) {
             placeraDjur(new Gepard());
             antalGeparder++;
@@ -118,8 +124,8 @@ public class Game {
         int y;
 
         do {
-            x = random.nextInt(20);
-            y = random.nextInt(60);
+            x = random.nextInt(17) + 1;
+            y = random.nextInt(58) + 1;
         } while (upptagen(x, y)); //något som testar om rutan är upptagen)
 
         if (djur instanceof Gepard) {
@@ -132,12 +138,12 @@ public class Game {
     }
 
     /**
-     * Testar spelplanens x och y
+     * Testar koordinatens x och y
      * om de redan används returnerar den true
      * om de inte används returnerar den false
      */
 
-    public boolean upptagen(int x, int y) {
+    public static boolean upptagen(int x, int y) {
         if (Game.spelplan[x][y] != null) {
             return true;
         } else {
@@ -145,46 +151,56 @@ public class Game {
         }
     }
 
-    /**
-     * La in Eli's enum och switch igen
-     *
-     * @param djur bestämmer vilket djur som ska röra sig
-     * @param dir  använder vi för att bestämma vilket håll
-     */
-    public static void flyttaDjur(Djur djur, Flytta dir) {
-        int x = djur.getxPos();
-        int y = djur.getyPos();
 
-        if (djur.getTag() == 'G') {
-            switch (dir) {
-                case up:
-                    break;
-                case down:
-                    break;
-                case left:
-                    break;
-                case right:
-                    break;
-            }
-        } else if (djur.getTag() == 'Z') {
-            switch (dir) {
-                case up:
-                    break;
-                case down:
-                    break;
-                case left:
-                    break;
-                case right:
-                    break;
-            }
-        }
-    }
-
-    public static Flytta generateRandomFlytt() {
+    public static Flytta randomFlytt() {
         Flytta[] values = Flytta.values();
         int length = values.length;
         int randIndex = new Random().nextInt(length);
         return values[randIndex];
+    }
+
+    /**
+     * Loopar igenom spelplanen och spar alla djuren i en enkel array som skickas vidare
+     * till metoden getDistance
+     */
+
+    public static void getDjurensPositioner() {
+        int x = 0;
+        Djur[] djurPos = new Djur[antalGeparder + antalZebror];
+        for (int i = 0; i < spelplan.length; i++) {
+            for (int j = 0; j < spelplan[i].length; j++) {
+                if (spelplan[i][j] != null) {
+                    djurPos[x] = spelplan[i][j];
+                    x++;
+                }
+            }
+        }
+        getDistance(djurPos);
+
+    }
+
+    /**
+     * Metoden mäter avståndet varje enskilt djur har till alla andra djur
+     * Just nu är villkoret att om något objekt har avståndet < 2 till ett annat objekt
+     * och om det ena är gepard och det andra zebra så ska något hända.
+     * <p>
+     * Här kan vi ha med saker som att en zebra ska bli rädd och få högre
+     * hastighet/byta riktning om den befinner sig inom ett visst avstånd från en gepard t.ex.
+     */
+    public static void getDistance(Djur[] djurPos) {
+        antalHits = 0; //OBS! Tillfällig för att se om den funkar
+
+        for (int i = 0; i < djurPos.length; i++) {
+            for (int j = i + 1; j < djurPos.length; j++) {
+                if (djurPos[i].getPosition().distance(djurPos[j].getPosition()) == 1 && djurPos[i].getTag() != djurPos[j].getTag()) {
+                    antalHits++;
+                    if (djurPos[i].getTag() == 'Z') {
+                    } else if (djurPos[i].getTag() == 'G') {
+
+                    }
+                }
+            }
+        }
     }
 
     public static int getAntalGeparder() {
@@ -194,4 +210,205 @@ public class Game {
     public static int getAntalZebror() {
         return antalZebror;
     }
+
+    public static void kontroll() {
+        for (int i = 0; i < spelplan.length - 1; i++) {
+            for (int j = 0; j < Game.spelplan[i].length; j++) {
+                if (spelplan[i][j] != null) {
+                    kontrollDjur(i, j);
+                }
+            }
+        }
+    }
+
+    /*
+     * Se om det går att titta på alla koordinater runt om, och gå in i en zebra om den finns där.
+     * Annars random move
+     *
+     *
+     */
+    public static void kontrollDjur(int i, int j) {
+        if (spelplan[i][j].harFlyttat() == false) {
+            flytta(i, j, randomFlytt());
+            setDennaFlyttKlar(false);
+        }
+    }
+
+    public static void resetFlytt() {
+        for (int i = 0; i < spelplan.length - 1; i++) {
+            for (int j = 0; j < Game.spelplan[i].length; j++) {
+                if (spelplan[i][j] != null) {
+                    spelplan[i][j].setFlytt(false);
+                }
+            }
+        }
+    }
+
+    /**
+     * La in Eli's enum och switch igen
+     * <p>
+     * måste kolla om rutan är upptagen.....
+     *
+     * @param dir använder vi för att bestämma vilket håll
+     */
+
+
+    /*en metod för att hämta djurets riktning ur enumtypen
+      Flytta dir.
+     */
+    public static void flytta(int x, int y, Game.Flytta dir) {
+
+
+        switch (dir) {
+            case up:
+
+                if (spelplan[x][y].getxPos() == 0) {
+                    moveDjur(x + 1, y, spelplan[x][y].getTag()); //anropar metod moveDjur för att genomföra rörelsen
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+                    break;
+                } else {
+                    moveDjur(x - 1, y, spelplan[x][y].getTag());
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+                    break;
+                }
+
+
+                //if flyttat = sant, reset x, y. Annars break;
+            case down:
+
+                if (spelplan[x][y].getxPos() == 18) {
+                    moveDjur(x - 1, y, spelplan[x][y].getTag());
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+                    break;
+                } else {
+                    moveDjur(x + 1, y, spelplan[x][y].getTag());
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+
+                    break;
+                }
+
+
+            case left:
+                if (spelplan[x][y].getyPos() == 0) {
+                    moveDjur(x, y + 1, spelplan[x][y].getTag());
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+                    break;
+                } else {
+                    moveDjur(x, y - 1, spelplan[x][y].getTag());
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+
+                    break;
+                }
+
+            case right:
+
+                if (spelplan[x][y].getyPos() == 59) {
+                    moveDjur(x, y - 1, spelplan[x][y].getTag());
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+                    break;
+                } else {
+                    moveDjur(x, y + 1, spelplan[x][y].getTag());
+                    if(dennaFlyttKlar == true){
+                        resetDjur(x, y);
+                    }
+
+                    break;
+                }
+        }
+
+    }
+
+    public static void moveDjur(int x, int y, char tag) {
+        if (tag == 'G') {
+            moveGepard(x, y);
+        } else if (tag == 'Z') {
+            moveZebra(x, y);
+        }
+    }
+
+    public static void moveGepard(int x, int y) {
+        if (upptagen(x, y)) {
+            if(spelplan[x][y] instanceof Zebra) {
+                spelplan[x][y] = new Gepard(x, y, true);
+                setDennaFlyttKlar(true);
+
+            }else if(spelplan[x][y].getTag() == 'G'){
+                return;
+            }
+        } else if (upptagen(x, y) == false) {
+            spelplan[x][y] = new Gepard(x, y, true);
+            setDennaFlyttKlar(true);
+        }
+    }
+
+    public static void moveZebra(int x, int y) {
+        if (upptagen(x, y)) {
+            return;
+        } else if (upptagen(x, y) == false) {
+            spelplan[x][y] = new Zebra(x, y, true);
+            setDennaFlyttKlar(true);
+        }
+    }
+
+
+    static boolean checkFlytt(int x, int y){
+        if(spelplan[x][y] == null){
+            return false;
+        }else if(spelplan[x][y].harFlyttat()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static void resetDjur(int x, int y) { //en metod för att reseta spelplanen innan denya positionerna
+        spelplan[x][y] = null;                  //för djur skrivits in på spelplanen
+
+    }
+
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    /**
+     * Tillfällig metod för att testa getDistance()
+     */
+    public static void skrivUtSkoj() {
+        System.out.println("På " + antalHits + " platser på spelplanen är en gepard precis bredvid en zebra");
+
+    }
+
+    public void debug() {
+        for (int i = 0; i < spelplan.length; i++) {
+            for (int j = 0; j < spelplan[i].length; j++) {
+                if (spelplan[i][j] != null) {
+                    System.out.println(spelplan[i][j].toString());
+                }
+            }
+        }
+    }
+
+    public static boolean isDennaFlyttKlar() {
+        return dennaFlyttKlar;
+    }
+
+    public static void setDennaFlyttKlar(boolean dennaFlyttKlar) {
+        Game.dennaFlyttKlar = dennaFlyttKlar;
+    }
+
 }
