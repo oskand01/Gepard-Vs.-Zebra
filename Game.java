@@ -80,6 +80,7 @@ public class Game {
             Spelplan.printSpelplan();
             kontroll();
             resetFlytt();
+            getDjur();
             //debug();
 
             try {
@@ -164,7 +165,7 @@ public class Game {
      * till metoden getDistance
      */
 
-    public static void getDjurensPositioner() {
+    public static void getDjur() {
         int x = 0;
         Djur[] djurPos = new Djur[antalGeparder + antalZebror];
         for (int i = 0; i < spelplan.length; i++) {
@@ -175,9 +176,26 @@ public class Game {
                 }
             }
         }
+        getAntalDjur(djurPos);
         getDistance(djurPos);
 
     }
+    
+    public static void getAntalDjur(Djur[] djurPos) {
+        int zebror = 0;
+        int geparder = 0;
+        for (int i = 0; i < djurPos.length; i++) {
+            if (djurPos[i] instanceof Zebra) {
+                zebror++;
+            } else if (djurPos[i] instanceof Gepard) {
+                geparder++;
+            }
+        }
+        setAntalGeparder(geparder);
+        setAntalZebror(zebror);
+
+    }
+    
 
     /**
      * Metoden mäter avståndet varje enskilt djur har till alla andra djur
