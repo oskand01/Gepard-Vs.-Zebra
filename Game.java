@@ -218,7 +218,7 @@ public class Game {
             total = (int)(getAntalGeparder() - getAntalZebror() + Math.random() * 20);
             skapaAntalDjur(0, total);
             //placeraDjur(new Zebra());
-            setAntalZebror(getAntalZebror() + 1);
+            //Behövs inte, skapaAntalDjur tar hand om det också :) setAntalZebror(getAntalZebror() + 1);
             zebror += total;
         }
     }
