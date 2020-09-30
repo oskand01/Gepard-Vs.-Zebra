@@ -75,7 +75,7 @@ public class Game {
      * endast för redovisningens skull
      */
     public void runGame() {
-        while (Game.getZebraKills() >= 50) {
+        while (Game.getZebraKills() != 50) {
             clearScreen();
             Spelplan.printSpelplan();
             vadFinns();
@@ -213,12 +213,13 @@ public class Game {
     }
 
     public void nyaZebror() {
-        int antalNya;
+        int total;
         if (getAntalZebror() < getAntalGeparder()) {
-            antalNya = (int)(getAntalGeparder() - getAntalZebror() + Math.random() * 20);
-            skapaAntalDjur(0, antalNya);
-            // behövs inte, görs när dom skapas -> setAntalZebror(getAntalZebror() + 1);
-            zebror += antalNya;
+            total = (int)(getAntalGeparder() - getAntalZebror() + Math.random() * 20);
+            skapaAntalDjur(0, total);
+            //placeraDjur(new Zebra());
+            setAntalZebror(getAntalZebror() + 1);
+            zebror += total;
         }
     }
 
@@ -512,7 +513,6 @@ public class Game {
      * men fancy
      *
      * debug har används för att visa exakta värden på djuren mellan varje print
-     * clear-screen skulle vara en lösning för att renda skärmen mellan varje utskrift i terminalen
      */
     public void debug() {
         for (int i = 0; i < spelplan.length; i++) {
