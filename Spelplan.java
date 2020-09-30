@@ -41,9 +41,8 @@ public class Spelplan {
 
         System.out.println("Antal Geparder: " + Game.getAntalGeparder());
         System.out.println("Antal Zebror: " + Game.getAntalZebror());
-        Game.skrivUtSkoj(); //OBS! Bara tillfällig
+        //Game.skrivUtSkoj(); //OBS! Bara tillfällig
         System.out.println();
         System.out.println();
-
     }
 }

@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class Game {
 
-
     /**
      * En salig blandning av svenska och engelska
      * försökt städa lite
@@ -21,16 +20,8 @@ public class Game {
     private static int antalHits; //OBS! Tillfällig för att se om metoden getDistance() fungerar
 
     protected enum Flytta {up, down, left, right}
-    private static boolean dennaFlyttKlar = false;
 
-    /**
-     * Agerar default
-     */
-    public Game(int geparder, int zebror) {
-        antalGeparder = geparder;
-        antalZebror = zebror;
-        skapaAntalDjur(antalGeparder, antalZebror);
-    }
+    private static boolean dennaFlyttKlar = false;
 
     /**
      * Konstruktorn agerar som själva menyn för "spelet"
@@ -42,7 +33,6 @@ public class Game {
      */
     public Game() {
         System.out.println("Välkommen till den årliga Gepard vs. Zebra-tävlingen!");
-
         System.out.println("Hur många geparder ska jaga hur många zebror?");
         mataInDjur();
         runGame();
@@ -65,9 +55,9 @@ public class Game {
 
     /**
      * En game-loop
-     * kör Spelplan() och Move()
-     * fortsätter tills spelplanen är tom
-     * Villkoren kan vi ändra sen
+     * <p>
+     * fortsätter tills spelplanen uppfyller villkoret vi satt.
+     *
      * <p>
      * thread.sleep(3000)
      * innebär att programmet pausar i 3000 millisekunder
@@ -81,10 +71,10 @@ public class Game {
             kontroll();
             resetFlytt();
             getDjur();
-            //debug();
+            //debug(); Användes för att få exakta koordinater och antal djur, lättare att felsöka
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (Exception e) {
                 System.out.println("mög");
             }
@@ -164,7 +154,6 @@ public class Game {
      * Loopar igenom spelplanen och spar alla djuren i en enkel array som skickas vidare
      * till metoden getDistance
      */
-
     public static void getDjur() {
         int x = 0;
         Djur[] djurPos = new Djur[antalGeparder + antalZebror];
@@ -180,7 +169,7 @@ public class Game {
         getDistance(djurPos);
 
     }
-    
+
     public static void getAntalDjur(Djur[] djurPos) {
         int zebror = 0;
         int geparder = 0;
@@ -193,9 +182,8 @@ public class Game {
         }
         setAntalGeparder(geparder);
         setAntalZebror(zebror);
-
     }
-    
+
 
     /**
      * Metoden mäter avståndet varje enskilt djur har till alla andra djur
@@ -215,32 +203,13 @@ public class Game {
                     if (avstånd < 2 && djurPos[i].getTag() != djurPos[j].getTag()) {
                         antalHits++; //Tillfällig
                     } else if (avstånd < 2 && djurPos[i].getTag() == djurPos[j].getTag()) {
-
                     }
                 }
-
             }
         }
-
-    }
-    
-    public static void setAntalGeparder(int antalGeparder) {
-        Game.antalGeparder = antalGeparder;
     }
 
-    public static void setAntalZebror(int antalZebror) {
-        Game.antalZebror = antalZebror;
-    }
-
-    public static int getAntalGeparder() {
-        return antalGeparder;
-    }
-
-    public static int getAntalZebror() {
-        return antalZebror;
-    }
-
-    public static void kontroll() {
+    public void kontroll() {
         for (int i = 0; i < spelplan.length - 1; i++) {
             for (int j = 0; j < Game.spelplan[i].length; j++) {
                 if (spelplan[i][j] != null) {
@@ -256,14 +225,18 @@ public class Game {
      *
      *
      */
-    public static void kontrollDjur(int i, int j) {
+    public void kontrollDjur(int i, int j) {
         if (spelplan[i][j].harFlyttat() == false) {
-            flytta(i, j, randomFlytt());
+            if (spelplan[i][j] instanceof Gepard) {
+                flytta(i, j, checkRuntOm(i, j));
+            } else {
+                flytta(i, j, randomFlytt());
+            }
             setDennaFlyttKlar(false);
         }
     }
 
-    public static void resetFlytt() {
+    public void resetFlytt() {
         for (int i = 0; i < spelplan.length - 1; i++) {
             for (int j = 0; j < Game.spelplan[i].length; j++) {
                 if (spelplan[i][j] != null) {
@@ -285,56 +258,52 @@ public class Game {
     /*en metod för att hämta djurets riktning ur enumtypen
       Flytta dir.
      */
-    public static void flytta(int x, int y, Game.Flytta dir) {
-
+    public void flytta(int x, int y, Game.Flytta dir) {
 
         switch (dir) {
             case up:
 
                 if (spelplan[x][y].getxPos() == 0) {
                     moveDjur(x + 1, y, spelplan[x][y].getTag()); //anropar metod moveDjur för att genomföra rörelsen
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
                     break;
                 } else {
                     moveDjur(x - 1, y, spelplan[x][y].getTag());
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
                     break;
                 }
 
-
-                //if flyttat = sant, reset x, y. Annars break;
             case down:
 
                 if (spelplan[x][y].getxPos() == 18) {
                     moveDjur(x - 1, y, spelplan[x][y].getTag());
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
                     break;
                 } else {
                     moveDjur(x + 1, y, spelplan[x][y].getTag());
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
 
                     break;
                 }
 
-
             case left:
                 if (spelplan[x][y].getyPos() == 0) {
                     moveDjur(x, y + 1, spelplan[x][y].getTag());
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
                     break;
                 } else {
                     moveDjur(x, y - 1, spelplan[x][y].getTag());
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
 
@@ -345,23 +314,21 @@ public class Game {
 
                 if (spelplan[x][y].getyPos() == 59) {
                     moveDjur(x, y - 1, spelplan[x][y].getTag());
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
                     break;
                 } else {
                     moveDjur(x, y + 1, spelplan[x][y].getTag());
-                    if(dennaFlyttKlar == true){
+                    if (dennaFlyttKlar == true) {
                         resetDjur(x, y);
                     }
-
                     break;
                 }
         }
-
     }
 
-    public static void moveDjur(int x, int y, char tag) {
+    public void moveDjur(int x, int y, char tag) {
         if (tag == 'G') {
             moveGepard(x, y);
         } else if (tag == 'Z') {
@@ -369,13 +336,13 @@ public class Game {
         }
     }
 
-    public static void moveGepard(int x, int y) {
+    public void moveGepard(int x, int y) {
         if (upptagen(x, y)) {
-            if(spelplan[x][y] instanceof Zebra) {
+            if (spelplan[x][y] instanceof Zebra) {
                 spelplan[x][y] = new Gepard(x, y, true);
                 setDennaFlyttKlar(true);
 
-            }else if(spelplan[x][y].getTag() == 'G'){
+            } else if (spelplan[x][y].getTag() == 'G') {
                 return;
             }
         } else if (upptagen(x, y) == false) {
@@ -384,7 +351,7 @@ public class Game {
         }
     }
 
-    public static void moveZebra(int x, int y) {
+    public void moveZebra(int x, int y) {
         if (upptagen(x, y)) {
             return;
         } else if (upptagen(x, y) == false) {
@@ -393,35 +360,54 @@ public class Game {
         }
     }
 
+    /**
+     * Metod för att sätta den angivna positionen till null efter en flytt
+     */
+    public void resetDjur(int x, int y) {
+        spelplan[x][y] = null;
 
-    static boolean checkFlytt(int x, int y){
-        if(spelplan[x][y] == null){
-            return false;
-        }else if(spelplan[x][y].harFlyttat()){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public static void resetDjur(int x, int y) { //en metod för att reseta spelplanen innan denya positionerna
-        spelplan[x][y] = null;                  //för djur skrivits in på spelplanen
-
-    }
-
-    public static void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
     }
 
     /**
      * Tillfällig metod för att testa getDistance()
      */
-    public static void skrivUtSkoj() {
+    public void skrivUtSkoj() {
         System.out.println("På " + antalHits + " platser på spelplanen är en gepard precis bredvid en zebra");
-
     }
 
+
+    /**
+     * Samlat upp get-set- och diverse return metoder
+     */
+    public static boolean isDennaFlyttKlar() {
+        return dennaFlyttKlar;
+    }
+
+    public static void setDennaFlyttKlar(boolean dennaFlyttKlar) {
+        Game.dennaFlyttKlar = dennaFlyttKlar;
+    }
+
+    public static void setAntalGeparder(int antalGeparder) {
+        Game.antalGeparder = antalGeparder;
+    }
+
+    public static void setAntalZebror(int antalZebror) {
+        Game.antalZebror = antalZebror;
+    }
+
+    public static int getAntalGeparder() {
+        return antalGeparder;
+    }
+
+    public static int getAntalZebror() {
+        return antalZebror;
+    }
+
+    /**
+     * Bonus,
+     * Meningslösa metoder för programmets funktion
+     * men fancy
+     */
     public void debug() {
         for (int i = 0; i < spelplan.length; i++) {
             for (int j = 0; j < spelplan[i].length; j++) {
@@ -432,12 +418,40 @@ public class Game {
         }
     }
 
-    public static boolean isDennaFlyttKlar() {
-        return dennaFlyttKlar;
+    public void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
-    public static void setDennaFlyttKlar(boolean dennaFlyttKlar) {
-        Game.dennaFlyttKlar = dennaFlyttKlar;
+    public Flytta checkRuntOm(int x, int y) {
+        if (outOfBounds(x, y) == false) {
+            if (spelplan[x - 1][y] instanceof Zebra) {
+                return Flytta.up;
+            } else if (spelplan[x + 1][y] instanceof Zebra) {
+                return Flytta.down;
+            } else if (spelplan[x][y - 1] instanceof Zebra) {
+                return Flytta.left;
+            } else if (spelplan[x][y + 1] instanceof Zebra) {
+                return Flytta.right;
+            } else {
+                return randomFlytt();
+            }
+        } else {
+            return randomFlytt();
+        }
+    }
+
+    public boolean outOfBounds(int x, int y) {
+        if (spelplan[x][y].getxPos() <= 0) {
+            return true;
+        } else if (spelplan[x][y].getxPos() >= 18) {
+            return true;
+        } else if (spelplan[x][y].getyPos() <= 0) {
+            return true;
+        } else if (spelplan[x][y].getyPos() >= 58) {
+            return true;
+        } else
+            return false;
     }
 
 }
