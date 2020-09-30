@@ -15,6 +15,7 @@ public class Spelplan {
      * Enkelt förklarat kollar den raderna först och sen kolumnerna
      */
     static void printSpelplan() {
+        skrivUtSkoj();
         System.out.println("**************************************************************"); //toppens gräns
 
 
@@ -41,8 +42,30 @@ public class Spelplan {
 
         System.out.println("Antal Geparder: " + Game.getAntalGeparder());
         System.out.println("Antal Zebror: " + Game.getAntalZebror());
-        //Game.skrivUtSkoj(); //OBS! Bara tillfällig
+        System.out.println("Uppätna zebror: " + Game.getZebraKills());
+        //OBS! Bara tillfällig
         System.out.println();
         System.out.println();
+
+    }
+
+    public static void skrivUtSkoj() {
+        System.out.println("På " + Game.antalHits + " platser på spelplanen är en gepard precis bredvid en zebra");
+    }
+
+    public static void skrivUtIntro () {
+        System.out.println("**************************************************************");
+        System.out.println("********************* GEPARD vs ZEBRA ************************");
+        System.out.println("**************************************************************");
+    }
+
+    public static void skrivUtOutro() {
+        System.out.println("**************************************************************");
+        System.out.println("************************* GAME OVER **************************");
+        System.out.println("**************************************************************");
+
+
     }
 }
+
+

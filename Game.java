@@ -13,15 +13,16 @@ public class Game {
      * försökt städa lite
      */
     protected static Djur[][] spelplan = new Djur[20][60];
-    Random random = new Random();
+    private Random random = new Random();
     private static int antalGeparder;
     private static int antalZebror;
+    private static int zebror;
 
-    private static int antalHits; //OBS! Tillfällig för att se om metoden getDistance() fungerar
+    protected static int antalHits; //OBS! Tillfällig för att se om metoden getDistance() fungerar
 
     protected enum Flytta {up, down, left, right}
 
-    private static boolean dennaFlyttKlar = false;
+    private boolean dennaFlyttKlar = false;
 
     /**
      * Konstruktorn agerar som själva menyn för "spelet"
@@ -32,24 +33,30 @@ public class Game {
      * Tar hand om game-loopen
      */
     public Game() {
-        System.out.println("Välkommen till den årliga Gepard vs. Zebra-tävlingen!");
-        System.out.println("Hur många geparder ska jaga hur många zebror?");
+        Spelplan.skrivUtIntro();
         mataInDjur();
+        getDjur();
         runGame();
     }
 
     public void mataInDjur() {
         Scanner scan = new Scanner(System.in);
-        int gepard;
-        int zebra;
-
-        gepard = scan.nextInt();
-        do {
-            System.out.println("Antalet Zebror måste vara minst lika många som Geparder");
-            zebra = scan.nextInt();
-        } while (gepard > zebra);
-
+        int gepard = 0;
+        int zebra = 0;
+        try {
+            System.out.print("\nHur många geparder och zebror ska delta?\nGeparder: ");
+            gepard = scan.nextInt();
+            while (gepard > zebra || zebra < 1) {
+                System.out.print("Zebrorna måste vara minst lika många som geparderna.\nZebror: ");
+                zebra = scan.nextInt();
+            }
+        } catch ( Exception e) {
+            System.out.println("Du måste skriva in en siffra!");
+            mataInDjur();
+        }
+        this.zebror = zebra;
         skapaAntalDjur(gepard, zebra);
+
     }
 
 
@@ -65,12 +72,14 @@ public class Game {
      * endast för redovisningens skull
      */
     public void runGame() {
-        while (antalZebror > 0 && antalGeparder != 0) {
+        while (Game.getZebraKills() != 50) {
             clearScreen();
             Spelplan.printSpelplan();
             kontroll();
             resetFlytt();
             getDjur();
+            getZebraKills();
+
             //debug(); Användes för att få exakta koordinater och antal djur, lättare att felsöka
 
             try {
@@ -79,6 +88,7 @@ public class Game {
                 System.out.println("mög");
             }
         }
+        Spelplan.skrivUtOutro();
     }
 
     /**
@@ -154,7 +164,7 @@ public class Game {
      * Loopar igenom spelplanen och spar alla djuren i en enkel array som skickas vidare
      * till metoden getDistance
      */
-    public static void getDjur() {
+    public void getDjur() {
         int x = 0;
         Djur[] djurPos = new Djur[antalGeparder + antalZebror];
         for (int i = 0; i < spelplan.length; i++) {
@@ -166,11 +176,12 @@ public class Game {
             }
         }
         getAntalDjur(djurPos);
+        nyaZebror();
         getDistance(djurPos);
 
     }
 
-    public static void getAntalDjur(Djur[] djurPos) {
+    public void getAntalDjur(Djur[] djurPos) {
         int zebror = 0;
         int geparder = 0;
         for (int i = 0; i < djurPos.length; i++) {
@@ -184,6 +195,26 @@ public class Game {
         setAntalZebror(zebror);
     }
 
+    public static int getZebraKills() {
+
+        int zebraKills = 0;
+        if (zebror > getAntalZebror()) {
+            zebraKills += zebror - getAntalZebror();
+        }
+        return zebraKills;
+    }
+
+    public void nyaZebror() {
+        int total;
+        if (getAntalZebror() < getAntalGeparder()) {
+            total = (int)(getAntalGeparder() - getAntalZebror() + Math.random() * 20);
+            skapaAntalDjur(0, total);
+            //placeraDjur(new Zebra());
+            setAntalZebror(getAntalZebror() + 1);
+            zebror += total;
+        }
+    }
+
 
     /**
      * Metoden mäter avståndet varje enskilt djur har till alla andra djur
@@ -193,7 +224,7 @@ public class Game {
      * Här kan vi ha med saker som att en zebra ska bli rädd och få högre
      * hastighet/byta riktning om den befinner sig inom ett visst avstånd från en gepard t.ex.
      */
-    public static void getDistance(Djur[] djurPos) {
+    public void getDistance(Djur[] djurPos) {
         antalHits = 0; //OBS! Tillfällig för att se om den funkar
         int avstånd;
         for (int i = 0; i < djurPos.length; i++) {
@@ -371,20 +402,18 @@ public class Game {
     /**
      * Tillfällig metod för att testa getDistance()
      */
-    public void skrivUtSkoj() {
-        System.out.println("På " + antalHits + " platser på spelplanen är en gepard precis bredvid en zebra");
-    }
+
 
 
     /**
      * Samlat upp get-set- och diverse return metoder
      */
-    public static boolean isDennaFlyttKlar() {
+    public boolean isDennaFlyttKlar() {
         return dennaFlyttKlar;
     }
 
-    public static void setDennaFlyttKlar(boolean dennaFlyttKlar) {
-        Game.dennaFlyttKlar = dennaFlyttKlar;
+    public void setDennaFlyttKlar(boolean dennaFlyttKlar) {
+        this.dennaFlyttKlar = dennaFlyttKlar;
     }
 
     public static void setAntalGeparder(int antalGeparder) {
@@ -401,6 +430,14 @@ public class Game {
 
     public static int getAntalZebror() {
         return antalZebror;
+    }
+
+    public void setZebror(int zebror) {
+        this.zebror = zebror;
+    }
+
+    public int getZebror() {
+        return zebror;
     }
 
     /**
