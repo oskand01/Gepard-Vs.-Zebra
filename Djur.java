@@ -67,6 +67,10 @@ public class Djur {
         this.position = new Point(getxPos(), getyPos());
     }
 
+    /**
+     * Har använts vid debug för bl.a
+     * att se djurens exakta x och y värden
+     */
     @Override
     public String toString() {
         return "Djur{" +
