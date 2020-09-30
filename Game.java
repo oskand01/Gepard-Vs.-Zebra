@@ -9,8 +9,7 @@ import java.util.Scanner;
 public class Game {
 
     /**
-     * En salig blandning av svenska och engelska
-     * försökt städa lite
+     * En salig blandning Svengelska
      */
     protected static Djur[][] spelplan = new Djur[20][60];
     private Random random = new Random();
@@ -26,11 +25,11 @@ public class Game {
 
     /**
      * Konstruktorn agerar som själva menyn för "spelet"
-     * <p>
+     *
      * Skickar vidare till metoder som:
      * Tar emot inmatning av antal djur, som skickar vidare och
      * Placerar djuren på spelplanen
-     * Tar hand om game-loopen
+     * Startar runGame som behandlar vår Game-loop
      */
     public Game() {
         Spelplan.skrivUtIntro();
@@ -62,20 +61,24 @@ public class Game {
 
     /**
      * En game-loop
-     * <p>
+     * som ska rensa, skriva ut spelplanen, flytta alla djur,
+     * ställer tillbaka en boolean i djuren om dom flyttat sig eller inte till false inför nästa runda
+     *och sist visar hur många djur som finns på spelplanen.
+     *
      * fortsätter tills spelplanen uppfyller villkoret vi satt.
      *
-     * <p>
-     * thread.sleep(3000)
-     * innebär att programmet pausar i 3000 millisekunder
+     * När villkoret uppfylls skrivs vår Game-over skärm ut
+     *
+     * thread.sleep(500)
+     * innebär att programmet pausar i 500 millisekunder (halv sekund)
      * inte optimalt att köra i större program,
      * endast för redovisningens skull
      */
     public void runGame() {
-        while (Game.getZebraKills() != 50) {
+        while (Game.getZebraKills() >= 50) {
             clearScreen();
             Spelplan.printSpelplan();
-            kontroll();
+            vadFinns();
             resetFlytt();
             getDjur();
             getZebraKills();
@@ -153,7 +156,12 @@ public class Game {
     }
 
 
-    public static Flytta randomFlytt() {
+    /**
+     * Returnerar ett random värde från vår enum Flytta
+     * så up, down, left eller right
+     *
+     */
+    public Flytta randomFlytt() {
         Flytta[] values = Flytta.values();
         int length = values.length;
         int randIndex = new Random().nextInt(length);
@@ -205,13 +213,12 @@ public class Game {
     }
 
     public void nyaZebror() {
-        int total;
+        int antalNya;
         if (getAntalZebror() < getAntalGeparder()) {
-            total = (int)(getAntalGeparder() - getAntalZebror() + Math.random() * 20);
-            skapaAntalDjur(0, total);
-            //placeraDjur(new Zebra());
-            setAntalZebror(getAntalZebror() + 1);
-            zebror += total;
+            antalNya = (int)(getAntalGeparder() - getAntalZebror() + Math.random() * 20);
+            skapaAntalDjur(0, antalNya);
+            // behövs inte, görs när dom skapas -> setAntalZebror(getAntalZebror() + 1);
+            zebror += antalNya;
         }
     }
 
@@ -240,7 +247,12 @@ public class Game {
         }
     }
 
-    public void kontroll() {
+    /**
+     * Söker igenom hela arrayen efter Djur
+     * skickar vidare till kontroll för vilket djur koordinaten innehåller
+     * för att bestämma hur det ska beté sig
+     */
+    public void vadFinns() {
         for (int i = 0; i < spelplan.length - 1; i++) {
             for (int j = 0; j < Game.spelplan[i].length; j++) {
                 if (spelplan[i][j] != null) {
@@ -250,11 +262,17 @@ public class Game {
         }
     }
 
-    /*
-     * Se om det går att titta på alla koordinater runt om, och gå in i en zebra om den finns där.
-     * Annars random move
+    /**
+     * Kontrollerar djuret
+     * Om det redan fått flytta sig en gång hoppas de över.
+     * Är det en Gepard, skickar den vidare och letar först efter en Zebra, hittar den ingen
+     * får den en random flytt.
      *
+     * Zebra för tillfället flyttar sig endast random
      *
+     * Den sista metoden är en återställning av en kontroll
+     * som görs så inte djuret råkar bli felaktigt borttaget
+     * under de andra metodernas gång
      */
     public void kontrollDjur(int i, int j) {
         if (spelplan[i][j].harFlyttat() == false) {
@@ -267,6 +285,13 @@ public class Game {
         }
     }
 
+    /**
+     * Metod som stället om boolean flytt i varje enskilt djur
+     * så dom är redo för att flytta sig nästa omgång.
+     *
+     * utan en sån boolean kunde samma djur flytta sig ett okontrollerat antal gånger
+     * mellan 2 olika utskrifter av spelplanen.
+     */
     public void resetFlytt() {
         for (int i = 0; i < spelplan.length - 1; i++) {
             for (int j = 0; j < Game.spelplan[i].length; j++) {
@@ -278,16 +303,12 @@ public class Game {
     }
 
     /**
-     * La in Eli's enum och switch igen
-     * <p>
-     * måste kolla om rutan är upptagen.....
+     * En switch som tagit emot Djurets koordinater och ett håll den ska flytta sig
      *
-     * @param dir använder vi för att bestämma vilket håll
-     */
-
-
-    /*en metod för att hämta djurets riktning ur enumtypen
-      Flytta dir.
+     *
+     * @param x Djurets x-koordinat
+     * @param y Djurets y-koordinat
+     * @param dir bestäms av random eller om Geparden hittat en Zebra
      */
     public void flytta(int x, int y, Game.Flytta dir) {
 
@@ -359,6 +380,16 @@ public class Game {
         }
     }
 
+
+    /**
+     * Kollar vilket djur som ska röra sig.
+     * Valde att använda Tag istället för instanceof
+     *för att slippa skriva spelplan hit och dit
+     *
+     * Djuren får sina egna flytt-metoder.
+     * Zebror rör sig bara om rutan är tom,
+     * Geparder rör sig över allt utom andra Geparder
+     */
     public void moveDjur(int x, int y, char tag) {
         if (tag == 'G') {
             moveGepard(x, y);
@@ -392,7 +423,48 @@ public class Game {
     }
 
     /**
-     * Metod för att sätta den angivna positionen till null efter en flytt
+     * Används i kontrollDjur() om det är en Gepard
+     * för att söka runt sig efter en Zebra,
+     * om det finns returneras den riktning som Zebran är i.
+     * annars returneras randomFlytt.
+     *
+     * outOfBounds() används för att undvika exception
+     * om Geparden skulle stå emot en kant vid söktillfället.
+     */
+    public Flytta checkRuntOm(int x, int y) {
+        if (outOfBounds(x, y) == false) {
+            if (spelplan[x - 1][y] instanceof Zebra) {
+                return Flytta.up;
+            } else if (spelplan[x + 1][y] instanceof Zebra) {
+                return Flytta.down;
+            } else if (spelplan[x][y - 1] instanceof Zebra) {
+                return Flytta.left;
+            } else if (spelplan[x][y + 1] instanceof Zebra) {
+                return Flytta.right;
+            } else {
+                return randomFlytt();
+            }
+        } else {
+            return randomFlytt();
+        }
+    }
+
+    public boolean outOfBounds(int x, int y) {
+        if (spelplan[x][y].getxPos() <= 0) {
+            return true;
+        } else if (spelplan[x][y].getxPos() >= 18) {
+            return true;
+        } else if (spelplan[x][y].getyPos() <= 0) {
+            return true;
+        } else if (spelplan[x][y].getyPos() >= 58) {
+            return true;
+        } else
+            return false;
+    }
+
+    /**
+     * Ställer den gamla positionen till null
+     * efter en lyckad flytt.
      */
     public void resetDjur(int x, int y) {
         spelplan[x][y] = null;
@@ -400,13 +472,7 @@ public class Game {
     }
 
     /**
-     * Tillfällig metod för att testa getDistance()
-     */
-
-
-
-    /**
-     * Samlat upp get-set- och diverse return metoder
+     * Samlat upp get-set- och diverse
      */
     public boolean isDennaFlyttKlar() {
         return dennaFlyttKlar;
@@ -444,6 +510,9 @@ public class Game {
      * Bonus,
      * Meningslösa metoder för programmets funktion
      * men fancy
+     *
+     * debug har används för att visa exakta värden på djuren mellan varje print
+     * clear-screen skulle vara en lösning för att renda skärmen mellan varje utskrift i terminalen
      */
     public void debug() {
         for (int i = 0; i < spelplan.length; i++) {
@@ -458,37 +527,6 @@ public class Game {
     public void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-    }
-
-    public Flytta checkRuntOm(int x, int y) {
-        if (outOfBounds(x, y) == false) {
-            if (spelplan[x - 1][y] instanceof Zebra) {
-                return Flytta.up;
-            } else if (spelplan[x + 1][y] instanceof Zebra) {
-                return Flytta.down;
-            } else if (spelplan[x][y - 1] instanceof Zebra) {
-                return Flytta.left;
-            } else if (spelplan[x][y + 1] instanceof Zebra) {
-                return Flytta.right;
-            } else {
-                return randomFlytt();
-            }
-        } else {
-            return randomFlytt();
-        }
-    }
-
-    public boolean outOfBounds(int x, int y) {
-        if (spelplan[x][y].getxPos() <= 0) {
-            return true;
-        } else if (spelplan[x][y].getxPos() >= 18) {
-            return true;
-        } else if (spelplan[x][y].getyPos() <= 0) {
-            return true;
-        } else if (spelplan[x][y].getyPos() >= 58) {
-            return true;
-        } else
-            return false;
     }
 
 }
