@@ -1,15 +1,17 @@
 package company;
 
 import java.awt.*;
-
+import java.util.Random;
 public class Djur {
-
+    Random random = new Random();
     private char tag;
     private int xPos;
     private int yPos;
     private Point position;
 
     private boolean flytt;
+    private int speed;
+
 
 
     public Djur() {
@@ -17,13 +19,22 @@ public class Djur {
         xPos = -1;
         yPos = -1;
         position = new Point(getxPos(), getyPos());
+        speed = 1;
     }
+
+
 
     public Djur(int x, int y) {
         this.xPos = x;
         this.yPos = y;
         this.tag = tag;
         this.position = new Point(getxPos(),getyPos());
+    }
+
+    public Djur(int speed){
+
+        getSpeed();
+
     }
 
 
@@ -66,6 +77,28 @@ public class Djur {
     public void setPosition(int x, int y) {
         this.position = new Point(getxPos(), getyPos());
     }
+
+    /*public void setSpeed(int speed) {
+        int max = 3;
+        int min = 1;
+        this.speed = random.nextInt(max-min+1) + min;
+
+        }*/
+
+        public int getSpeed(){
+            int max = 3;
+            int min = 1;
+            this.speed = random.nextInt(max-min+1) + min;
+            return this.speed;
+        }
+
+
+
+
+
+
+
+
 
     /**
      * Har använts vid debug för bl.a

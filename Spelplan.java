@@ -10,17 +10,18 @@ public class Spelplan {
 
 
     /**
-     * Utskriften för hela spelplanen och djuren,
-     * representerade av sin tillhörande tag.
+     * Utskriften för hela spelplanen
+     * Lång onödig förklaring på vad allt gör här tills senare
+     * Enkelt förklarat kollar den raderna först och sen kolumnerna
      */
     static void printSpelplan() {
         skrivUtSkoj();
-        System.out.println("**************************************************************"); //toppens psuedo-gräns
+        System.out.println("**************************************************************"); //toppens gräns
 
 
         for (int i = 0; i < Game.spelplan.length; i++) {
             if(i >= 19){
-                System.out.print("**************************************************************"); //Bottens Gräns
+                System.out.print("**************************************************************");
             }else{System.out.print("*"); } //vänster gräns
 
             for (int j = 0; j < Game.spelplan[i].length; j++) {

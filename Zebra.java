@@ -1,10 +1,16 @@
 package company;
 
 public class Zebra extends Djur {
+    public boolean scared;
+
 
     public Zebra() {
         super();
         this.setTag('Z');
+    }
+    public Zebra(int speed){
+        super(speed);
+
     }
 
     public Zebra(int x, int y) {
@@ -16,6 +22,11 @@ public class Zebra extends Djur {
         super(x, y);
         this.setTag('Z');
         this.setFlytt(flytt);
+
+
+
     }
+
+
 
 }
