@@ -1,4 +1,4 @@
-package company;
+package com.company;
 
 public class Zebra extends Djur {
 
@@ -8,8 +8,8 @@ public class Zebra extends Djur {
     }
 
     public Zebra(int x, int y) {
-        super(x, y);
-        this.setTag('Z');
+        super(x, y); //superklassen får sköta sitt
+        this.setTag('Z'); //Zebrans identitetsmarkör
         this.setFlytt(false);
     }
     public Zebra(int x, int y, boolean flytt) {

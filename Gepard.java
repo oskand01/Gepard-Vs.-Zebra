@@ -1,4 +1,4 @@
-package company;
+package com.company;
 
 public class Gepard extends Djur {
 
@@ -9,7 +9,7 @@ public class Gepard extends Djur {
 
     public Gepard(int x, int y) {
         super(x, y);
-        this.setTag('G');
+        this.setTag('G');//gepardens identitetsmarkör
         this.setFlytt(false);
     }
     public Gepard(int x, int y, boolean flytt) {
