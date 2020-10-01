@@ -1,5 +1,6 @@
-package com.company;
+package company;
 
+import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -82,7 +83,7 @@ public class Game {
             getDjur();
             getZebraKills();
 
-            //debug(); Användes för att få exakta koordinater och antal djur, lättare att felsöka
+            debug(); //Användes för att få exakta koordinater och antal djur, lättare att felsöka
 
             try {
                 Thread.sleep(500);
@@ -313,73 +314,91 @@ public class Game {
      * @param dir bestäms av random eller om Geparden hittat en Zebra
      */
     public void flytta(int x, int y, Game.Flytta dir) {
+        int speed = (int) (1 + Math.random() * 3);
+        char djurTag = spelplan[x][y].getTag();
+        Point djurPosition = new Point();
+        djurPosition.setLocation(x,y);
 
-        switch (dir) {
-            case up:
+        for (int i = 0; i < speed; i++) {
 
-                if (spelplan[x][y].getxPos() == 0) { //kollar om dess position ligger på noll, vilket är på gränsen till
-                                                      //spelplanens slut. Förflyttar sig i motsatt håll.
-                    moveDjur(x + 1, y, spelplan[x][y].getTag()); //anropar metod moveDjur för att genomföra rörelsen
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y); //resetar djurets tidigare position
-                    }
-                    break;
-                } else {
-                    moveDjur(x - 1, y, spelplan[x][y].getTag());
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y);
-                    }
-                    break;
-                }
+            int a = (int) djurPosition.getX();
+            int b = (int) djurPosition.getY();
+            resetDjur(a,b);
 
-            case down:
+            switch (dir) {
+                case up:
 
-                if (spelplan[x][y].getxPos() == 18) {
-                    moveDjur(x - 1, y, spelplan[x][y].getTag());
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y);
-                    }
-                    break;
-                } else {
-                    moveDjur(x + 1, y, spelplan[x][y].getTag());
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y);
+                    if (a == 0) {
+                        moveDjur((int) (a + 1), b, djurTag); //anropar metod moveDjur för att genomföra rörelsen
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a + 1, b);
+                        }
+                        break;
+                    } else {
+                        moveDjur(a - 1, b, djurTag);
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a - 1, b);
+                        }
+                        break;
                     }
 
-                    break;
-                }
+                case down:
 
-            case left:
-                if (spelplan[x][y].getyPos() == 0) {
-                    moveDjur(x, y + 1, spelplan[x][y].getTag());
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y);
-                    }
-                    break;
-                } else {
-                    moveDjur(x, y - 1, spelplan[x][y].getTag());
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y);
+                    if (a == 18) {
+                        moveDjur(a - 1, b, djurTag);
+
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a - 1, b);
+                        }
+                        break;
+                    } else {
+                        moveDjur(a + 1, b, djurTag);
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a + 1, b);
+                        }
+                        break;
                     }
 
-                    break;
-                }
-
-            case right:
-
-                if (spelplan[x][y].getyPos() == 59) {
-                    moveDjur(x, y - 1, spelplan[x][y].getTag());
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y);
+                case left:
+                    if (b == 0) {
+                        moveDjur(a, b + 1, djurTag);
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a, b + 1);
+                        }
+                        break;
+                    } else {
+                        moveDjur(a, b - 1, djurTag);
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a, b - 1);
+                        }
+                        break;
                     }
-                    break;
-                } else {
-                    moveDjur(x, y + 1, spelplan[x][y].getTag());
-                    if (dennaFlyttKlar == true) {
-                        resetDjur(x, y);
+
+
+                case right:
+
+                    if (b == 58) {
+                        moveDjur(a, b - 1, djurTag);
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a, b - 1);
+
+
+                        }
+                        break;
+                    } else {
+                        moveDjur(a, b + 1, djurTag);
+
+                        if (dennaFlyttKlar == true) {
+                            djurPosition.setLocation(a, b + 1);
+
+
+                        }
+                        break;
                     }
-                    break;
-                }
+            }
+            setDennaFlyttKlar(false);
+
+
         }
     }
 
