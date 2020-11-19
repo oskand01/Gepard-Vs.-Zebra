@@ -1,2 +1,2 @@
 # Gepard-Vs.-Zebra
-Projektarbete
+Projektarbete i kursen Programmering i Java.
